@@ -1,0 +1,64 @@
+---
+title: "Exercises from R for DS"
+author: "starhopp3r"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(ggplot2)
+library(dplyr)
+opts_chunk$set(fig.align="center", fig.height=4, fig.width=5.5)
+```
+
+Chapter 3, dplyr, Exercises on filter()
+
+```{r}
+library(nycflights13)
+flights
+```
+1. Find all flights that:
+  a. Had an arrival delay of two or more hours
+  b. Flew to Houston (IAH or HOU)
+  c. Were operated by United, American, or Delta
+  d. Departed in Summer (July, August, September)
+  e. Arrived more than 2 hours late, but didn't leave late
+  f. Were delayed at least 1 hour but made up over 30 minutes in flight
+  g. Departed between midnight and 6 a.m.
+  
+``` {r}
+#1.a.
+filter(flights, arr_time - sched_arr_time >= 120)
+```
+``` {r}
+#1.b.
+filter(flights, dest %in% c('HOU', 'IAH'))
+```
+``` {r}
+#1.c.
+filter(flights, carrier == 'UA' | carrier == 'DL' | carrier == 'AA')
+```
+``` {r}
+filter(flights, carrier %in% c('DL', 'AA', 'UA') | is.na(carrier))
+sort(unique(flights$month))
+```
+``` {r}
+#1.d.
+filter(flights, month %in% c(7,8,9))
+```
+``` {r}
+#1.e.
+filter(flights, arr_delay >= 30 & dep_delay <= 0)
+```
+``` {r}
+filter(flights, dep_delay >= 60 & dep_delay - arr_delay >= 30)
+```
+``` {r} 
+filter(flights, dep_time >= 0000 & dep_time <= 0600)
+filter(flights, between(dep_time, 0, 600))
+```
+``` {r}
+filter(flights, is.na(dep_time))
+```

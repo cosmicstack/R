@@ -1,0 +1,51 @@
+---
+title: "ggplot_trials"
+author: "starhopp3r"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Trials from <https://socviz.co/makeplot.html#makeplot>
+
+```{r}
+library(gapminder)
+gapminder
+```
+
+The data above is of long format, i.e. each row is an observation and each column is a variable. This is the format we want our data to be when we use ggplot. Other forms of data could be present, i.e. wide format. There are tools to convert these. There are questions on tibble.
+
+## Starting with ggplot
+
+Let's say we want to plot Life Expectancy against per capita GDP for all country-years in the data.
+
+```{r}
+p <- ggplot(gapminder, mapping = aes(gdpPercap, lifeExp))
+p + geom_point()
+```
+
+Try a different *geom* function with `p`.
+``` {r}
+p + geom_smooth() + geom_point()
+```
+
+Let's attempt to change the x-scale:
+``` {r}
+p + geom_point() + geom_smooth(method='lm') + scale_x_log10(labels = scales::dollar)
+```
+Moving on to add more aesthetic elements:
+``` {r}
+p + geom_point(alpha=0.3, color='gray') +
+  geom_smooth(method = 'loess', color='salmon') +
+  scale_x_log10(labels = scales::dollar) + 
+  labs(x = 'GDP per capita', y = 'Life Expectancy in years')
+```
+Change the mappings in the aes() function so that you plot Life Expectancy against population (pop) rather than per capita GDP. What does that look like? What does it tell you about the unit of observation in the dataset?
+
+``` {r}
+p <- ggplot(gapminder, mapping = aes(x = pop, y = lifeExp))
+p + geom_point() + scale_x_binned(labels = scales::unit_format(unit = "M", scale = 1e-6))
+```
